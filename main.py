@@ -5,7 +5,7 @@ import tkinter.font as tkFont
 from data import *
 
 class Kviz(tk.Frame):
-    def __init__(self, parent, categories):
+    def __init__(self, parent, categories, teams):
         super().__init__(parent)
         self.frames = {
             'home': HomeFrame(self, categories),
@@ -15,24 +15,34 @@ class Kviz(tk.Frame):
         header.pack(fill=tk.X)
         header.configure(background=COLOR, pady="2", padx="2") 
         VolumeControls(header, self.font_resize).pack(fill=tk.X, side="right")
-        self.pointLabel = tk.Label(header, text=0)
-        self.pointLabel.pack(fill=tk.X, side="left")
         self.current_frame = 'home'
         self.frames['home'].pack(expand=True, fill=tk.BOTH)
         self.bind('<Configure>', self.font_resize)
-        self.points = 0
+
+        self.teams = list(map(lambda teamname: {'name': teamname, 'points': 0}, teams))
+        self.current_team = 0
+        for team in self.teams:
+            teamLabel = tk.Label(header, font=tkFont.nametofont('TkTextFont'), text=f"{team['name']} | {team['points']}")
+            teamLabel.pack(fill=tk.X, side="left", padx="4")
+            team['label'] = teamLabel
 
     def switch_frames(self, frame):
         self.frames[self.current_frame].pack_forget()
         self.frames[frame].pack(expand=True, fill=tk.BOTH)
         self.current_frame = frame
 
+    def next_team(self):
+        self.current_team = (self.current_team+1) % len(self.teams)
+
     def correct(self):
-        self.points = self.points + 1
-        self.pointLabel.configure(text=self.points)
+        team = self.teams[self.current_team]
+        team['points'] = team['points'] + 1
+        team['label'].configure(text=f"{team['name']} | {team['points']}")
+        self.next_team()
         self.switch_frames('home')
 
     def wrong(self):
+        self.next_team()
         self.switch_frames('home')
 
     def ask_question(self, item):
@@ -91,7 +101,6 @@ COLOR = "#5555dd"
 if __name__ == "__main__":
 
     data = DATA
-    print(data.categories)
 
     root = tk.Tk()
     root.title("Kvíz")
@@ -99,7 +108,7 @@ if __name__ == "__main__":
 
     default_font = tkFont.nametofont("TkDefaultFont")
 
-    kviz = Kviz(root, data.categories)
+    kviz = Kviz(root, data.categories, data.teams)
     kviz.pack(expand=True, fill=tk.BOTH)
 
     root.mainloop()
