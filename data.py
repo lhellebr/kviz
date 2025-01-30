@@ -9,7 +9,8 @@ class Answer:
 
 class Item:
     def __init__(self, question, options):
-        self.question = question
+        self.points = int(question[0:4])
+        self.question = question[4:]
         self.options = []
         for option in options:
             if option[0] == '*':

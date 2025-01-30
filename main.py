@@ -34,9 +34,9 @@ class Kviz(tk.Frame):
     def next_team(self):
         self.current_team = (self.current_team+1) % len(self.teams)
 
-    def correct(self):
+    def correct(self, points):
         team = self.teams[self.current_team]
-        team['points'] = team['points'] + 1
+        team['points'] = team['points'] + points
         team['label'].configure(text=f"{team['name']} | {team['points']}")
         self.next_team()
         self.switch_frames('home')
@@ -57,7 +57,8 @@ class Kviz(tk.Frame):
                 new_size = default_font.cget("size") -1
             default_font.configure(size=new_size)
         else:
-            default_font.configure(size=int(self.winfo_width()//30))
+            pass
+            # default_font.configure(size=int(self.winfo_width()//30))
 
 class HomeFrame(tk.Frame):
     def __init__(self, parent, categories):
@@ -65,7 +66,7 @@ class HomeFrame(tk.Frame):
         for category_number, category in enumerate(categories):
             tk.Label(self, text=category.name).grid(column=category_number, row=0, sticky="news")
             for item_number, item in enumerate(category.items):
-                button = tk.Button(self, text=item.question)
+                button = tk.Button(self, text=item.points)
                 button.grid(column=category_number, row=item_number+1, sticky="news")
                 button.configure(command = lambda button_fixed=button, item_fixed=item: self.question_clicked(button_fixed, item_fixed))
         self.columnconfigure(tuple(range(self.grid_size()[0])), weight=1)
@@ -86,7 +87,11 @@ class QuestionFrame(tk.Frame):
         tk.Label(self, text=item.question).pack()
         answerFrame = tk.Frame(self).pack()
         for option in item.options:
-            tk.Button(self, text=option.text, command=self.master.correct if option.correct else self.master.wrong).pack()
+            if option.correct:
+                cmd = lambda: self.master.correct(item.points)
+            else:
+                cmd = self.master.wrong
+            tk.Button(self, text=option.text, command=cmd).pack()
 
 
 class VolumeControls(tk.Frame):
