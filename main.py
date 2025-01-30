@@ -57,7 +57,7 @@ class HomeFrame(tk.Frame):
             for item_number, item in enumerate(category.items):
                 button = tk.Button(self, text=item.question)
                 button.grid(column=category_number, row=item_number+1, sticky="news")
-                button.configure(command = lambda button_fixed=button: self.question_clicked(button_fixed, item))
+                button.configure(command = lambda button_fixed=button, item_fixed=item: self.question_clicked(button_fixed, item_fixed))
         self.columnconfigure(tuple(range(self.grid_size()[0])), weight=1)
         self.rowconfigure(tuple(range(1, self.grid_size()[1])), weight=1)
         
