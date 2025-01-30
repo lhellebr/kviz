@@ -1,26 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import tkinter as tk
 import tkinter.font as tkFont
-
-class Answer:
-    def __init__(self, text, correct=False):
-        self.text = text
-        self.correct = correct
-    def is_correct(self):
-        return self.correct
-
-class Item:
-    def __init__(self, question):
-        self.question = question
-        self.options = [Answer("Answer A"), Answer("Answer B", correct=True), Answer("Answer C")]
-        self.asked = False
-        self.answered_correctly = False
-
-class Category:
-    def __init__(self, name, items):
-        self.name = name
-        self.items = items
+from data import *
 
 class Kviz(tk.Frame):
     def __init__(self, parent, categories):
@@ -106,18 +88,18 @@ class VolumeControls(tk.Frame):
 
 COLOR = "#5555dd"
 
-category1 = Category("Category 1", [Item("Question A"), Item("Question B")])
-category2 = Category("Category 2", [Item("Question C"), Item("Question D")])
+if __name__ == "__main__":
 
-categories = [category1, category2]
+    data = DATA
+    print(data.categories)
 
-root = tk.Tk()
-root.title("Kvíz")
-root.minsize(400, 200)
+    root = tk.Tk()
+    root.title("Kvíz")
+    root.minsize(400, 200)
 
-default_font = tkFont.nametofont("TkDefaultFont")
+    default_font = tkFont.nametofont("TkDefaultFont")
 
-kviz = Kviz(root, categories)
-kviz.pack(expand=True, fill=tk.BOTH)
+    kviz = Kviz(root, data.categories)
+    kviz.pack(expand=True, fill=tk.BOTH)
 
-root.mainloop()
+    root.mainloop()
