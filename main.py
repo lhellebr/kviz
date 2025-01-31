@@ -25,6 +25,7 @@ class Kviz(tk.Frame):
             teamLabel = tk.Label(header, font=tkFont.nametofont('TkTextFont'), text=f"{team['name']} | {team['points']}")
             teamLabel.pack(fill=tk.X, side="left", padx="4")
             team['label'] = teamLabel
+        self.teams[self.current_team]['label'].configure(background=ACTIVE_COLOR)
 
     def switch_frames(self, frame):
         self.frames[self.current_frame].pack_forget()
@@ -32,7 +33,9 @@ class Kviz(tk.Frame):
         self.current_frame = frame
 
     def next_team(self):
+        self.teams[self.current_team]['label'].configure(background=BACKGROUND)
         self.current_team = (self.current_team+1) % len(self.teams)
+        self.teams[self.current_team]['label'].configure(background=ACTIVE_COLOR)
 
     def correct(self, points):
         team = self.teams[self.current_team]
@@ -58,7 +61,8 @@ class Kviz(tk.Frame):
             default_font.configure(size=new_size)
         else:
             pass
-            # default_font.configure(size=int(self.winfo_width()//30))
+            #default_font.configure(size=int(self.winfo_width()//45))
+            default_font.configure(size=18)
 
 class HomeFrame(tk.Frame):
     def __init__(self, parent, categories):
@@ -102,6 +106,8 @@ class VolumeControls(tk.Frame):
         tk.Button(self, height=-1, font=tkFont.nametofont('TkTextFont'), text="-", command=lambda: method("-")).pack(side=tk.RIGHT)
 
 COLOR = "#5555dd"
+ACTIVE_COLOR = "#ff6e4a"
+BACKGROUND = "#fdef6c"
 
 if __name__ == "__main__":
 
@@ -110,6 +116,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Kvíz")
     root.minsize(400, 200)
+    root.tk_setPalette(background=BACKGROUND)
 
     default_font = tkFont.nametofont("TkDefaultFont")
 
