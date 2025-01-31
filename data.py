@@ -65,11 +65,11 @@ class Data:
         for line in config.splitlines():
             self.teams.append(line.strip())
 
-fileQ = open("questions.cfg", "r")
+fileQ = open("questions.cfg", "r", encoding="utf-8")
 contentQ = fileQ.read().strip()
 
 try:
-    fileT = open("teams.cfg", "r")
+    fileT = open("teams.cfg", "r", encoding="utf-8")
     contentT = fileT.read().strip()
 except: contentT = ""
 
